@@ -1,0 +1,23 @@
+.wrap{
+    height: 300px;
+    width: 300px;
+    background: #a33939;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.overlay {
+    transition: all 1s ease;
+}
+
+.overlay.animated {
+    transition: all 1s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.overlay.animated.show {
+    transition: all 1s ease;
+    opacity: 1;
+    visibility: visible;
+}
