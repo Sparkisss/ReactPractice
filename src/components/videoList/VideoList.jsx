@@ -1,15 +1,17 @@
-import React from 'react'
-import './VideoList.css'
+import React from 'react';
+import './VideoList.css';
 
-export function VideoList() {
+export function VideoList({setOpen}) {
     const [count, setCount] = React.useState(0);
 
     const onClickPlus = () => {
-        setCount(count + 1);
+        if ((count + 1) >= 0) setOpen(true);
+        setCount(count + 1);        
     }
 
     const onClickMinus = () => {
-        setCount(count - 1);
+        if (count < 1) setOpen(false);
+        setCount(count - 1);        
     }
 
     return(
