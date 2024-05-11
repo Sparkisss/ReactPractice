@@ -4,7 +4,7 @@ import './User.css';
 export const User = ({id, email, first_name, last_name, onClickInvite, isInvited}) => {
     return(
         <>
-        <li >
+        <li className='user'>
         <div>
             <div>
                 <h3>{first_name} {last_name}</h3>

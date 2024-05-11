@@ -4,6 +4,7 @@ import { Game } from "./components/game/Game";
 import { Results } from "./components/results/Results";
 import React from 'react';
 import { Users } from "./components/users/Users";
+import { TestComponent } from "./components/testComponent/TestComponent";
 
 function App() {
 
@@ -118,6 +119,7 @@ function App() {
         countQuestions={countQuestions}/> : 
         <Results correct={correct} countQuestions={countQuestions}/>
       }
+       <TestComponent />
       {
         success ? (
           <div>{invites.length} people are included!</div>
