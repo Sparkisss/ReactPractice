@@ -1,138 +1,44 @@
-import { VideoList } from "./components/videoList/VideoList";
-import { ModalWind } from "./components/modalWind/ModalWind";
-import { Game } from "./components/game/Game";
-import { Results } from "./components/results/Results";
-import React from 'react';
-import { Users } from "./components/users/Users";
-import { TestComponent } from "./components/testComponent/TestComponent";
+import React, {useState, useRef} from 'react';
+import Counter from './components/counter/Counter';
+import './components/styles/style.css'
+import PostList from './components/postList/PostList';
+import PostForm from './components/postForm/PostForm';
 
 function App() {
+  const [posts, setPosts] = useState([
+    {id: 1, title: 'JS', body: 'Description'},
+    {id: 2, title: 'JS2', body: 'Description'},
+    {id: 3, title: 'JS3', body: 'Description'},
+    {id: 4, title: 'JS4', body: 'Description'}
+  ])
 
-  const questions = [
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'Reacts it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'PiReact it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'SiReact it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'DiReact it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-    {
-        title: 'React it is... ?',
-        options: ['library', 'framework', 'app'],
-        correct: 0,
-    },
-]
-  const [open, setOpen] = React.useState(true);
-  const [step, setStep] = React.useState(0);
-  const [correct, setCorrect] = React.useState(0);
-  const question = questions[step];
-  const countQuestions = questions.length;
-
-  const [users, setUsers] = React.useState([]);
-  const [isLoading, setLoading] = React.useState(true);
-  const [serachValue, setSearchValue] = React.useState('');
-  const [invites, setInvites] = React.useState([]);
-  const [success, setSuccess] = React.useState(false);
-  
-
-  React.useEffect(() => {
-    fetch('https://reqres.in/api/users')
-      .then(res => res.json())
-      .then(json => {
-        setUsers(json.data);
-      }).catch(err => {
-        console.warn(err);
-        alert('Error to take data of users')
-      }).finally(() => setLoading(false));
-  }, []);
-
-  const onClickOption = (index) => {
-    setStep(step + 1);
-
-    if (index === question.correct) {
-      setCorrect(correct + 1);
-    } 
-}
-
-  const onChangrSearchValue = (e) => {
-    setSearchValue(e.target.value);
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost])
   }
 
-  const onClickInvite = (id) => {
-    if (invites.includes(id)) {
-      setInvites(prev => prev.filter(_id => _id !== id));
-    }else {
-      setInvites(prev => [...prev, id]);
-    }
-  };
-
-  const onClickSendInvites = () => {
-    setSuccess(true);
-}
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !== post.id))
+  }
 
   return (
-    <>
-      <h1>Counter</h1>
-      <VideoList open={open} setOpen={setOpen}/>
-      <ModalWind open={open}/>
+    <div className='App'>      
+      <Counter/>
+      <PostForm create={createPost}/>
+      <hr style={{margin: '15px 0'}}/>
+      <div>
+        <select>
+          <option value="value1">For name</option>
+          <option value="value2">For description</option>
+        </select>
+      </div>
       {
-        step !== countQuestions ? <Game step={step} question={question} 
-        onClickOption={onClickOption}
-        countQuestions={countQuestions}/> : 
-        <Results correct={correct} countQuestions={countQuestions}/>
-      }
-       <TestComponent />
-      {
-        success ? (
-          <div>{invites.length} people are included!</div>
-        ) : (
-          <Users serachValue={serachValue}
-            onChangrSearchValue={onChangrSearchValue}
-            items={users} isLoading={isLoading}
-            invites={invites}
-            onClickInvite={onClickInvite}
-            onClickSendInvites={onClickSendInvites}/>
-        )
-      }
-    </>
+        posts.length !==0
+        ? <PostList remove={removePost} posts={posts} title={'Evgen'}/>
+        : <h2 style={{textAlign: 'center'}}>
+            Posts not found!
+          </h2>
+      }      
+    </div>
   );
 }
 
