@@ -1,8 +1,11 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useMemo} from 'react';
 import Counter from './components/counter/Counter';
 import './components/styles/style.css'
 import PostList from './components/postList/PostList';
 import PostForm from './components/postForm/PostForm';
+import PostFilter from './components/postFilter/PostFilter';
+import MyModal from './components/UI/modal/MyModal';
+import MyButton from './components/UI/button/MyButton';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -12,8 +15,24 @@ function App() {
     {id: 4, title: 'JS4', body: 'Description'}
   ])
 
+  const [filter, setFilter] = useState({sort: '', query: ''})
+  const [modal, setModal] = useState(false)
+
+  const sortedPosts = useMemo(() => {
+    console.log('worked')
+    if(filter.sort) {
+      return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
+    }
+    return posts
+  }, [filter.sort, posts])
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
+  }, [filter.query, sortedPosts])
+
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
+    setModal(false)
   }
 
   const removePost = (post) => {
@@ -23,21 +42,15 @@ function App() {
   return (
     <div className='App'>      
       <Counter/>
-      <PostForm create={createPost}/>
+      <MyButton style={{marginTop: '30px'}} onClick={() => setModal(true)}>
+        Add user
+      </MyButton>
+      <MyModal visible={modal} setVisible={setModal}>
+        <PostForm create={createPost}/>
+      </MyModal>      
       <hr style={{margin: '15px 0'}}/>
-      <div>
-        <select>
-          <option value="value1">For name</option>
-          <option value="value2">For description</option>
-        </select>
-      </div>
-      {
-        posts.length !==0
-        ? <PostList remove={removePost} posts={posts} title={'Evgen'}/>
-        : <h2 style={{textAlign: 'center'}}>
-            Posts not found!
-          </h2>
-      }      
+      <PostFilter filter={filter} setFilter={setFilter}/>
+      <PostList remove={removePost} posts={sortedAndSearchedPosts} title={'Evgen'}/>
     </div>
   );
 }
